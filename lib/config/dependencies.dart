@@ -1,5 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:sqlite_offline/data/storage/local_storage.dart';
+import 'package:sqlite_offline/data/storage/shared_preference_storage.dart';
 import '../data/repositories/auth_repository.dart';
 import '../domain/use_cases/auth/check_auth_state_use_case.dart';
 import '../domain/use_cases/auth/get_username_use_case.dart';
@@ -10,8 +12,13 @@ import 'theme_manager.dart';
 
 List<SingleChildWidget> get providersLocal {
   return [
+    Provider<LocalStorage>(
+      create: (context) => SharedPreferenceStorage(),
+    ),
+
     ChangeNotifierProvider<ThemeManager>(
-      create: (context) => ThemeManager(),
+      create: (context) =>
+          ThemeManager(localStorage: context.read<LocalStorage>()),
     ),
     Provider<AuthRepository>(
       create: (context) => MockAuthRepository(),

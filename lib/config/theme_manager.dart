@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:sqlite_offline/data/storage/local_storage.dart';
 
 class ThemeManager extends ChangeNotifier {
+  final String isDarkModeKey = "isDarkModeKey";
+  final LocalStorage localStorage;
   bool _isDarkMode = true;
 
   bool get isDarkMode => _isDarkMode;
 
-  ThemeManager() {
-    // TODO: Implementar carregamento do tema salvo se necessário
-    _isDarkMode = true;
+  ThemeManager({required this.localStorage}) {
+    init();
   }
 
-  void toggleTheme() {
+  void init() async {
+    final result = await localStorage.getData<bool>(key: isDarkModeKey);
+    _isDarkMode = result ?? true;
+  }
+
+  void toggleTheme() async {
     _isDarkMode = !_isDarkMode;
-    // TODO: Implementar salvamento do tema se necessário
+    await localStorage.create<bool>(key: isDarkModeKey, data: _isDarkMode);
     notifyListeners();
   }
 
-  void setTheme(bool isDarkMode) {
+  void setTheme(bool isDarkMode) async {
     _isDarkMode = isDarkMode;
-    // TODO: Implementar salvamento do tema se necessário
+    await localStorage.create<bool>(key: isDarkModeKey, data: _isDarkMode);
     notifyListeners();
   }
 
