@@ -1,3 +1,5 @@
+import 'package:sqlite_offline/data/storage/local_storage.dart';
+
 abstract class AuthRepository {
   Future<bool> isLoggedIn();
   Future<String?> getUsername();
@@ -7,18 +9,27 @@ abstract class AuthRepository {
 }
 
 class MockAuthRepository implements AuthRepository {
+  final LocalStorage localStorage;
+
+  MockAuthRepository({required this.localStorage});
+
+  final String isLoggedStorageKey = "isLoggedKey";
+  final String usernameStorageKey = "usernameKey";
+
   bool _isLoggedIn = false;
   String? _username;
 
   @override
   Future<bool> isLoggedIn() async {
-    // TODO: Implementar verificação de estado salvo
+    final result = await localStorage.getData<String>(key: isLoggedStorageKey);
+    _isLoggedIn = result == "true";
     return _isLoggedIn;
   }
 
   @override
   Future<String?> getUsername() async {
-    // TODO: Implementar recuperação de username salvo
+    final result = await localStorage.getData<String>(key: usernameStorageKey);
+    _username = result;
     return _username;
   }
 
@@ -29,7 +40,6 @@ class MockAuthRepository implements AuthRepository {
       _isLoggedIn = true;
       _username = email.split('@').first;
 
-      // TODO: Implementar salvamento do estado
       await saveAuthState(_isLoggedIn, _username);
       return true;
     }
@@ -41,13 +51,15 @@ class MockAuthRepository implements AuthRepository {
     _isLoggedIn = false;
     _username = null;
 
-    // TODO: Implementar limpeza do estado salvo
     await saveAuthState(_isLoggedIn, _username);
   }
 
   @override
   Future<void> saveAuthState(bool isLoggedIn, String? username) async {
-    // TODO: Implementar persistência do estado
+    await localStorage.create(key: isLoggedStorageKey, data: isLoggedIn);
+
+    await localStorage.create(key: usernameStorageKey, data: username);
+
     _isLoggedIn = isLoggedIn;
     _username = username;
   }

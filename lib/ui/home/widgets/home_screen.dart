@@ -70,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   style: TextStyle(color: Colors.white),
                 ),
                 onTap: () async {
-                  Navigator.pop(context);
                   final authViewModel = context.read<AuthViewModel>();
                   await authViewModel.logout();
                   if (context.mounted) {

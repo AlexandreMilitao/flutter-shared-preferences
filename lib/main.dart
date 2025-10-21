@@ -2,6 +2,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqlite_offline/ui/splash/splash_page.dart';
 
 import 'config/dependencies.dart';
 import 'config/theme_manager.dart';
@@ -40,10 +41,9 @@ class MainApp extends StatelessWidget {
           theme: themeManager.lightTheme,
           darkTheme: themeManager.darkTheme,
           themeMode: themeManager.isDarkMode ? ThemeMode.dark : ThemeMode.light,
-          home: authViewModel.isLoggedIn
-              ? const HomeScreen()
-              : const LoginScreen(),
+          initialRoute: "/",
           routes: {
+            "/": (context) => const SplashPage(),
             '/login': (context) => const LoginScreen(),
             '/home': (context) => const HomeScreen(),
           },

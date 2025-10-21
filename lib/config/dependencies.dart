@@ -1,6 +1,7 @@
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:sqlite_offline/data/storage/local_storage.dart';
+import 'package:sqlite_offline/data/storage/secure_storage.dart';
 import 'package:sqlite_offline/data/storage/shared_preference_storage.dart';
 import '../data/repositories/auth_repository.dart';
 import '../domain/use_cases/auth/check_auth_state_use_case.dart';
@@ -21,7 +22,9 @@ List<SingleChildWidget> get providersLocal {
           ThemeManager(localStorage: context.read<LocalStorage>()),
     ),
     Provider<AuthRepository>(
-      create: (context) => MockAuthRepository(),
+      create: (context) => MockAuthRepository(
+        localStorage: LocalSecureStorage(),
+      ),
     ),
 
     Provider<CheckAuthStateUseCase>(
